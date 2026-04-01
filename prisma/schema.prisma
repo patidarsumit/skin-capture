@@ -1,0 +1,22 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../generated/prisma"
+}
+
+datasource db {
+  provider = "sqlite"
+}
+
+model SkinSubmission {
+  id               Int      @id @default(autoincrement())
+  originalFilename String
+  originalPath     String
+  enhancedPath     String
+  skinType         String
+  skinTone         String
+  skinConcerns     String
+  additionalNotes  String?
+  annotationLabel  String?
+  consentAccepted  Boolean
+  createdAt        DateTime @default(now())
+}

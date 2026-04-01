@@ -1,26 +1,56 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --background: #f6f6f1;
+  --foreground: #1c201c;
+  --card: #fffdfa;
+  --muted: #67706a;
+  --border: #d9ddd5;
+  --accent: #627a59;
+  --accent-strong: #40533c;
+  --accent-soft: #e6ecdf;
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-muted: var(--muted);
+  --color-border: var(--border);
+  --color-accent: var(--accent);
+  --color-accent-strong: var(--accent-strong);
+  --color-accent-soft: var(--accent-soft);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-geist-sans), Arial, Helvetica, sans-serif;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.page-grid {
+  background-image:
+    linear-gradient(to right, rgba(64, 83, 60, 0.06) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(64, 83, 60, 0.06) 1px, transparent 1px);
+  background-size: 36px 36px;
+}
+
+.glass-panel {
+  background: color-mix(in srgb, var(--card) 86%, white 14%);
+  backdrop-filter: blur(14px);
+}
+
+.soft-shadow {
+  box-shadow: 0 24px 60px rgba(28, 32, 28, 0.08);
 }
