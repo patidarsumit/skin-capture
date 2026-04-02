@@ -18,7 +18,18 @@ The app includes:
 
 ## Getting Started
 
-Run the project from the root of `next-16`.
+
+Run the project from the root folder(skin-capture).
+
+### Prerequisite: Node.js
+
+Make sure you have **Node.js (v18 or later)** installed. You can check by running:
+
+```bash
+node --version
+```
+
+If you see a version number, you're good to go. If not, [download Node.js](https://nodejs.org/) or install it using your system's package manager (e.g., `sudo apt install nodejs npm` on Ubuntu).
 
 1. Install dependencies:
 
@@ -69,19 +80,19 @@ The database stores metadata only, not raw image blobs.
 
 ## Main App Areas
 
-- Intake flow: [`app/page.tsx`](./next-16/app/page.tsx)
-- Main intake UI: [`components/skin-capture-studio.tsx`](./next-16/components/skin-capture-studio.tsx)
-- Gallery: [`app/gallery/page.tsx`](./next-16/app/gallery/page.tsx)
-- Enhance API: [`app/api/enhance/route.ts`](./next-16/app/api/enhance/route.ts)
-- Submission API: [`app/api/submissions/route.ts`](./next-16/app/api/submissions/route.ts)
-- Delete API: [`app/api/submissions/[id]/route.ts`](./next-16/app/api/submissions/[id]/route.ts)
-- Image processing: [`lib/image-processing.ts`](./next-16/lib/image-processing.ts)
-- Prisma schema: [`prisma/schema.prisma`](./next-16/prisma/schema.prisma)
+- Intake flow: [`app/page.tsx`](./app/page.tsx)
+- Main intake UI: [`components/skin-capture-studio.tsx`](./components/skin-capture-studio.tsx)
+- Gallery: [`app/gallery/page.tsx`](./app/gallery/page.tsx)
+- Enhance API: [`app/api/enhance/route.ts`](./app/api/enhance/route.ts)
+- Submission API: [`app/api/submissions/route.ts`](./app/api/submissions/route.ts)
+- Delete API: [`app/api/submissions/[id]/route.ts`](./app/api/submissions/[id]/route.ts)
+- Image processing: [`lib/image-processing.ts`](./lib/image-processing.ts)
+- Prisma schema: [`prisma/schema.prisma`](./prisma/schema.prisma)
 
 ## Project Hierarchy
 
 ```text
-next-16/
+skin-capture/
 ├── app/
 │   ├── api/
 │   │   ├── enhance/route.ts
