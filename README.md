@@ -1,36 +1,120 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Skin Capture Studio
+
+`Skin Capture Studio` is a local-first Next.js app for capturing a palm/skin image, collecting a short skin profile, enhancing the image, and saving the consultation record.
+
+The app includes:
+- guided 4-step intake flow
+- background removal and text overlay
+- local API routes in Next.js
+- SQLite persistence with Prisma
+- gallery view for saved consultations
+
+## Workflow
+
+1. Upload or capture an image.
+2. Fill the required skin profile fields.
+3. Enhance the image with background removal and optional text overlay.
+4. Submit the consultation and review it in the gallery.
+
+## Tech Stack
+
+- `Next.js 16` with App Router
+- `React 19`
+- `Tailwind CSS 4`
+- `Prisma`
+- `SQLite`
+- `better-sqlite3`
+- `@imgly/background-removal-node`
+- `sharp`
+
+## How Data Is Stored
+
+The app stores data in two places:
+
+- Images are stored as files under:
+  - `public/submissions/originals/`
+  - `public/submissions/enhanced/`
+- Form data and file paths are stored in SQLite:
+  - `prisma/dev.db`
+
+The database stores metadata only, not raw image blobs.
+
+## Main App Areas
+
+- Intake flow: [`app/page.tsx`](./next-16/app/page.tsx)
+- Main intake UI: [`components/skin-capture-studio.tsx`](./next-16/components/skin-capture-studio.tsx)
+- Gallery: [`app/gallery/page.tsx`](./next-16/app/gallery/page.tsx)
+- Enhance API: [`app/api/enhance/route.ts`](./next-16/app/api/enhance/route.ts)
+- Submission API: [`app/api/submissions/route.ts`](./next-16/app/api/submissions/route.ts)
+- Delete API: [`app/api/submissions/[id]/route.ts`](./next-16/app/api/submissions/[id]/route.ts)
+- Image processing: [`lib/image-processing.ts`](./next-16/lib/image-processing.ts)
+- Prisma schema: [`prisma/schema.prisma`](./next-16/prisma/schema.prisma)
 
 ## Getting Started
 
-First, run the development server:
+Run the project from the root of `next-16`.
+
+1. Install dependencies:
+
+```bash
+npm install
+```
+
+2. Sync the Prisma schema to the local SQLite database:
+
+```bash
+npx prisma db push
+```
+
+3. Start the development server:
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+4. Open the app:
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```bash
+http://localhost:3000
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Build
 
-## Learn More
+Run a production build:
 
-To learn more about Next.js, take a look at the following resources:
+```bash
+npm run build
+```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+If you hit a `better-sqlite3` / `NODE_MODULE_VERSION` error after switching Node versions, rebuild the native module:
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+```bash
+npm rebuild better-sqlite3
+```
 
-## Deploy on Vercel
+If that still fails, do a clean reinstall:
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+```bash
+rm -rf node_modules package-lock.json
+npm install
+```
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## View the Database
+
+You can inspect the local SQLite DB with Prisma Studio:
+
+```bash
+npx prisma studio
+```
+
+Or with SQLite CLI:
+
+```bash
+sqlite3 prisma/dev.db
+```
+
+## Notes
+
+- The enhancer uses `@imgly/background-removal-node` and applies a fallback padded pass for difficult close-capture cases.
+- Enhanced previews are returned to the client as Base64 during the preview step, then saved as files on submit.
+- The gallery is the user-facing view of saved consultations; Prisma Studio is the easiest admin-style DB viewer.

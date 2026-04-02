@@ -7,8 +7,7 @@ type Filters = {
   skinTone: string
   concern: string
   search: string
-  dateFrom: string
-  dateTo: string
+  sortBy: string
 }
 
 export function SubmissionFilterBar({
@@ -22,7 +21,8 @@ export function SubmissionFilterBar({
 }) {
   return (
     <div className="space-y-4">
-      <div className="flex flex-wrap gap-2">
+      <div className="flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
+        <div className="flex flex-wrap gap-2">
         {["all", ...skinTypes].map((item) => (
           <button
             key={item}
@@ -37,9 +37,26 @@ export function SubmissionFilterBar({
             {item === "all" ? "All skin types" : item}
           </button>
         ))}
+        </div>
+
+        <div className="flex items-center gap-3">
+          <label className="text-xs font-semibold uppercase tracking-[0.16em] text-muted">
+            Sort
+          </label>
+          <select
+            value={filters.sortBy}
+            onChange={(event) => onChange({ sortBy: event.target.value })}
+            className="rounded-full border border-border bg-background px-4 py-2 text-sm text-foreground outline-none transition-colors focus:border-accent"
+          >
+            <option value="newest">Newest first</option>
+            <option value="oldest">Oldest first</option>
+            <option value="skinType">Skin type</option>
+            <option value="skinTone">Skin tone</option>
+          </select>
+        </div>
       </div>
 
-      <div className="grid gap-3 lg:grid-cols-[1.2fr_repeat(3,minmax(0,0.7fr))_auto_auto_auto]">
+      <div className="grid gap-3 lg:grid-cols-[1.2fr_repeat(2,minmax(0,0.7fr))_auto]">
         <input
           type="text"
           placeholder="Search by filename..."
@@ -73,20 +90,6 @@ export function SubmissionFilterBar({
             </option>
           ))}
         </select>
-
-        <input
-          type="date"
-          value={filters.dateFrom}
-          onChange={(event) => onChange({ dateFrom: event.target.value })}
-          className="rounded-2xl border border-border bg-background px-4 py-3 text-sm text-foreground outline-none transition-colors focus:border-accent"
-        />
-
-        <input
-          type="date"
-          value={filters.dateTo}
-          onChange={(event) => onChange({ dateTo: event.target.value })}
-          className="rounded-2xl border border-border bg-background px-4 py-3 text-sm text-foreground outline-none transition-colors focus:border-accent"
-        />
 
         <div className="flex items-center justify-center rounded-2xl border border-border bg-background px-4 py-3 text-sm text-muted">
           {total} result{total !== 1 ? "s" : ""}

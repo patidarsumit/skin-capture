@@ -41,6 +41,7 @@ export async function GET(req: NextRequest) {
     const search = searchParams.get("search")
     const dateFrom = searchParams.get("dateFrom")
     const dateTo = searchParams.get("dateTo")
+    const sortBy = searchParams.get("sortBy") || "newest"
 
     const where: {
       skinType?: string
@@ -60,9 +61,18 @@ export async function GET(req: NextRequest) {
       if (dateTo) where.createdAt.lte = new Date(dateTo)
     }
 
+    const orderBy =
+      sortBy === "oldest"
+        ? { createdAt: "asc" as const }
+        : sortBy === "skinType"
+          ? [{ skinType: "asc" as const }, { createdAt: "desc" as const }]
+          : sortBy === "skinTone"
+            ? [{ skinTone: "asc" as const }, { createdAt: "desc" as const }]
+            : { createdAt: "desc" as const }
+
     const submissions = await prisma.skinSubmission.findMany({
       where,
-      orderBy: { createdAt: "desc" },
+      orderBy,
     })
 
     return NextResponse.json({
@@ -107,6 +117,13 @@ export async function POST(req: NextRequest) {
 
     if (!skinTones.some((tone) => tone.value === skinTone)) {
       return NextResponse.json({ error: "Choose a valid skin tone." }, { status: 400 })
+    }
+
+    if (concerns.length === 0) {
+      return NextResponse.json(
+        { error: "Select at least one skin concern before submitting." },
+        { status: 400 }
+      )
     }
 
     if (!enhancedImageData) {

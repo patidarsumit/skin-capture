@@ -45,18 +45,37 @@ export async function enhanceImageBuffer(
   const width = metadata.width ?? 1200
   const height = metadata.height ?? 1200
   const safeLabel = escapeSvgText(annotationLabel.trim())
-  const overlayHeight = Math.max(92, Math.round(height * 0.12))
-  const fontSize = Math.max(28, Math.round(width * 0.04))
+  const fontSize = Math.max(32, Math.round(width * 0.045))
+  const overlayHeight = Math.max(fontSize + 26, Math.round(fontSize * 1.75))
+  const horizontalPadding = Math.max(18, Math.round(fontSize * 0.62))
+  const estimatedTextWidth = Math.max(
+    92,
+    Math.round(annotationLabel.trim().length * fontSize * 0.56)
+  )
+  const overlayWidth = Math.min(
+    Math.max(estimatedTextWidth + horizontalPadding * 2, 160),
+    Math.round(width * 0.82)
+  )
+  const overlayX = 24
+  const overlayY = height - overlayHeight - 24
+  const textX = overlayX + horizontalPadding
+  const textY = overlayY + Math.round(overlayHeight * 0.62)
+  const cornerRadius = Math.round(overlayHeight / 2)
 
   const overlay = Buffer.from(`
     <svg width="${width}" height="${height}" xmlns="http://www.w3.org/2000/svg">
-      <rect x="24" y="${height - overlayHeight - 24}" rx="22" ry="22" width="${Math.max(
-        240,
-        Math.round(width * 0.52)
-      )}" height="${overlayHeight}" fill="rgba(28, 32, 28, 0.78)" />
+      <rect
+        x="${overlayX}"
+        y="${overlayY}"
+        rx="${cornerRadius}"
+        ry="${cornerRadius}"
+        width="${overlayWidth}"
+        height="${overlayHeight}"
+        fill="rgba(28, 32, 28, 0.78)"
+      />
       <text
-        x="48"
-        y="${height - Math.round(overlayHeight * 0.42)}"
+        x="${textX}"
+        y="${textY}"
         fill="#ffffff"
         font-size="${fontSize}"
         font-family="Arial, Helvetica, sans-serif"
