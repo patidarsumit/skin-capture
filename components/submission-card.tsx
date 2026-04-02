@@ -26,7 +26,7 @@ export function SubmissionCard({
 
   return (
     <article
-      className={`soft-shadow group relative flex h-full flex-col overflow-visible rounded-[28px] border border-border bg-card transition-opacity ${
+      className={`soft-shadow group relative flex h-full flex-col overflow-hidden rounded-[28px] border border-border bg-card transition-opacity sm:overflow-visible ${
         deleting ? "opacity-50" : ""
       }`}
     >
@@ -35,14 +35,14 @@ export function SubmissionCard({
         onClick={() => onRequestDelete(submission)}
         disabled={deleting}
         aria-label="Delete submission"
-        className="absolute -right-3 -top-3 z-20 flex h-10 w-10 items-center justify-center rounded-full border border-border bg-card text-muted shadow-[0_12px_30px_rgba(28,32,28,0.14)] ring-4 ring-background/90 transition-all hover:scale-105 hover:border-rose-300 hover:bg-rose-50 hover:text-rose-600 group-hover:shadow-[0_16px_36px_rgba(28,32,28,0.16)] disabled:cursor-not-allowed disabled:opacity-60"
+        className="absolute right-3 top-3 z-20 flex h-9 w-9 items-center justify-center rounded-full border border-border bg-card text-muted shadow-[0_10px_24px_rgba(28,32,28,0.12)] transition-all hover:scale-105 hover:border-rose-300 hover:bg-rose-50 hover:text-rose-600 disabled:cursor-not-allowed disabled:opacity-60 sm:-right-3 sm:-top-3 sm:h-10 sm:w-10 sm:ring-4 sm:ring-background/90 sm:group-hover:shadow-[0_16px_36px_rgba(28,32,28,0.16)]"
       >
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
           <path d="M18 6 6 18M6 6l12 12" />
         </svg>
       </button>
 
-      <div className="grid grid-cols-2 border-b border-border bg-background/30">
+      <div className="grid grid-cols-1 border-b border-border bg-background/30 sm:grid-cols-2">
         <PreviewPanel
           label="Original"
           src={submission.originalPath}
@@ -97,13 +97,13 @@ export function SubmissionCard({
           <p className="mt-2 text-sm leading-6 text-foreground">{concernSummary}</p>
         </div>
 
-        <div className="mt-auto flex items-center justify-between gap-3 border-t border-border pt-3">
+        <div className="mt-auto flex flex-col gap-3 border-t border-border pt-3 sm:flex-row sm:items-center sm:justify-between">
           <div className="text-xs uppercase tracking-[0.16em] text-muted">
             {submission.consentAccepted ? "Consent recorded" : "Consent missing"}
           </div>
           <button
             type="button"
-            className="rounded-full bg-accent px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-accent-strong"
+            className="w-full rounded-full bg-accent px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-accent-strong sm:w-auto"
             onClick={() => onPreview(submission, "enhanced")}
           >
             Preview details
@@ -131,7 +131,7 @@ function PreviewPanel({
         {label}
       </p>
       <div
-        className={`flex aspect-[4/5] items-center justify-center overflow-hidden rounded-[18px] border border-border ${
+        className={`flex aspect-[4/3] items-center justify-center overflow-hidden rounded-[18px] border border-border sm:aspect-[4/5] ${
           checkered
             ? "bg-[linear-gradient(45deg,#eceee8_25%,transparent_25%),linear-gradient(-45deg,#eceee8_25%,transparent_25%),linear-gradient(45deg,transparent_75%,#eceee8_75%),linear-gradient(-45deg,transparent_75%,#eceee8_75%)] bg-[length:18px_18px] bg-[position:0_0,0_9px,9px_-9px,-9px_0px] bg-[#f8f9f5]"
             : "bg-white"

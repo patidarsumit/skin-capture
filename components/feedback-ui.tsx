@@ -48,9 +48,10 @@ export function ModalShell({
   if (!open) return null
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-[#1c201c]/45 p-4 backdrop-blur-sm">
+    <div className="fixed inset-0 z-50 overflow-y-auto bg-[#1c201c]/45 px-4 pb-4 pt-5 backdrop-blur-sm sm:p-4">
       <div className="absolute inset-0" onClick={onClose} />
-      <div className="soft-shadow relative z-10 w-full max-w-3xl rounded-[30px] border border-border bg-card p-6 md:p-7">
+      <div className="relative z-10 flex min-h-full items-start justify-center pt-[max(env(safe-area-inset-top),0.5rem)] sm:items-center sm:py-6">
+        <div className="soft-shadow relative w-full max-w-3xl rounded-[30px] border border-border bg-card p-5 md:p-7">
         <div className="flex items-start justify-between gap-4">
           <div>
             <h3 className="text-2xl font-semibold tracking-tight text-foreground">{title}</h3>
@@ -62,7 +63,7 @@ export function ModalShell({
             type="button"
             onClick={onClose}
             aria-label="Close dialog"
-            className="flex h-10 w-10 items-center justify-center rounded-full border border-border bg-background text-muted transition-colors hover:border-accent hover:text-foreground"
+            className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full border border-border bg-background text-muted transition-colors hover:border-accent hover:text-foreground sm:h-10 sm:w-10"
           >
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
               <path d="M18 6 6 18M6 6l12 12" />
@@ -70,6 +71,7 @@ export function ModalShell({
           </button>
         </div>
         <div className="mt-5">{children}</div>
+        </div>
       </div>
     </div>
   )
