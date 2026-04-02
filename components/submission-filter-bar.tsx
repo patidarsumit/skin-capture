@@ -1,14 +1,7 @@
 "use client"
 
 import { skinConcerns, skinTones, skinTypes } from "@/lib/skin-profile"
-
-type Filters = {
-  skinType: string
-  skinTone: string
-  concern: string
-  search: string
-  sortBy: string
-}
+import type { SubmissionFilters as Filters } from "@/lib/types/submission"
 
 export function SubmissionFilterBar({
   filters,

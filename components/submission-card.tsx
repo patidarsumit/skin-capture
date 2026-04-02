@@ -1,18 +1,5 @@
 "use client"
-
-type Submission = {
-  id: number
-  originalFilename: string
-  originalPath: string
-  enhancedPath: string
-  skinType: string
-  skinTone: string
-  skinConcerns: string[]
-  additionalNotes: string | null
-  annotationLabel: string | null
-  consentAccepted: boolean
-  createdAt: string
-}
+import type { Submission } from "@/lib/types/submission"
 
 export function SubmissionCard({
   submission,

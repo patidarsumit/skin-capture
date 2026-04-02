@@ -13,6 +13,7 @@ function initializeSqlite() {
   fs.mkdirSync(path.dirname(databasePath), { recursive: true })
 
   const database = new Database(databasePath)
+  // Keep the local assessment setup usable even before Prisma schema sync runs.
   database.exec(`
     CREATE TABLE IF NOT EXISTS "SkinSubmission" (
       "id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
@@ -38,5 +39,6 @@ export const prisma =
   new PrismaClient({ adapter, log: ["error"] })
 
 if (process.env.NODE_ENV !== "production") {
+  // Reuse the client during local hot reloads to avoid connection churn.
   globalForPrisma.prisma = prisma
 }

@@ -33,6 +33,7 @@ export async function enhanceImageBuffer(
   filename: string,
   annotationLabel: string
 ): Promise<Buffer> {
+  // Background removal returns the processed subject as a transparent PNG-like blob.
   const blob = new Blob([new Uint8Array(fileBuffer)], { type: getMimeType(filename) })
   const resultBlob = await removeBackground(blob)
   const enhancedBuffer = Buffer.from(await resultBlob.arrayBuffer())
@@ -45,9 +46,11 @@ export async function enhanceImageBuffer(
   const width = metadata.width ?? 1200
   const height = metadata.height ?? 1200
   const safeLabel = escapeSvgText(annotationLabel.trim())
+  // Scale the overlay from the processed image so the label stays readable across inputs.
   const fontSize = Math.max(32, Math.round(width * 0.045))
   const overlayHeight = Math.max(fontSize + 26, Math.round(fontSize * 1.75))
   const horizontalPadding = Math.max(18, Math.round(fontSize * 0.62))
+  // Estimate text width from character count, then cap the pill so long labels do not dominate the image.
   const estimatedTextWidth = Math.max(
     92,
     Math.round(annotationLabel.trim().length * fontSize * 0.56)
@@ -59,6 +62,7 @@ export async function enhanceImageBuffer(
   const overlayX = 24
   const overlayY = height - overlayHeight - 24
   const textX = overlayX + horizontalPadding
+  // Align the text visually within the pill instead of relying on raw font metrics.
   const textY = overlayY + Math.round(overlayHeight * 0.62)
   const cornerRadius = Math.round(overlayHeight / 2)
 
@@ -85,6 +89,7 @@ export async function enhanceImageBuffer(
   `)
 
   return sharp(enhancedBuffer)
+    // Composite the label onto the transparent PNG returned by background removal.
     .composite([{ input: overlay, top: 0, left: 0 }])
     .png()
     .toBuffer()

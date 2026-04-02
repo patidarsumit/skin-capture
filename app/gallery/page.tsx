@@ -5,37 +5,8 @@ import Link from "next/link"
 import { FloatingToast, ModalShell } from "@/components/feedback-ui"
 import { SubmissionCard } from "@/components/submission-card"
 import { SubmissionFilterBar } from "@/components/submission-filter-bar"
-
-type Submission = {
-  id: number
-  originalFilename: string
-  originalPath: string
-  enhancedPath: string
-  skinType: string
-  skinTone: string
-  skinConcerns: string[]
-  additionalNotes: string | null
-  annotationLabel: string | null
-  consentAccepted: boolean
-  createdAt: string
-}
-
-type Filters = {
-  skinType: string
-  skinTone: string
-  concern: string
-  search: string
-  dateFrom: string
-  dateTo: string
-  sortBy: string
-}
-
-type ToastState = {
-  open: boolean
-  tone: "neutral" | "success" | "error"
-  title: string
-  message: string
-}
+import type { Submission, SubmissionFilters as Filters } from "@/lib/types/submission"
+import type { ToastState } from "@/lib/types/ui"
 
 export default function GalleryPage() {
   const [submissions, setSubmissions] = useState<Submission[]>([])

@@ -16,6 +16,34 @@ The app includes:
 3. Enhance the image with background removal and optional text overlay.
 4. Submit the consultation and review it in the gallery.
 
+## Getting Started
+
+Run the project from the root of `next-16`.
+
+1. Install dependencies:
+
+```bash
+npm install
+```
+
+2. Sync the Prisma schema to the local SQLite database:
+
+```bash
+npx prisma db push
+```
+
+3. Start the development server:
+
+```bash
+npm run dev
+```
+
+4. Open the app:
+
+```bash
+http://localhost:3000
+```
+
 ## Tech Stack
 
 - `Next.js 16` with App Router
@@ -50,32 +78,49 @@ The database stores metadata only, not raw image blobs.
 - Image processing: [`lib/image-processing.ts`](./next-16/lib/image-processing.ts)
 - Prisma schema: [`prisma/schema.prisma`](./next-16/prisma/schema.prisma)
 
-## Getting Started
+## Project Hierarchy
 
-Run the project from the root of `next-16`.
-
-1. Install dependencies:
-
-```bash
-npm install
-```
-
-2. Sync the Prisma schema to the local SQLite database:
-
-```bash
-npx prisma db push
-```
-
-3. Start the development server:
-
-```bash
-npm run dev
-```
-
-4. Open the app:
-
-```bash
-http://localhost:3000
+```text
+next-16/
+├── app/
+│   ├── api/
+│   │   ├── enhance/route.ts
+│   │   └── submissions/
+│   │       ├── route.ts
+│   │       └── [id]/route.ts
+│   ├── gallery/
+│   │   ├── layout.tsx
+│   │   └── page.tsx
+│   ├── favicon.ico
+│   ├── globals.css
+│   ├── icon.svg
+│   ├── layout.tsx
+│   └── page.tsx
+├── components/
+│   ├── feedback-ui.tsx
+│   ├── header-nav.tsx
+│   ├── skin-capture-studio.tsx
+│   ├── submission-card.tsx
+│   └── submission-filter-bar.tsx
+├── lib/
+│   ├── db.ts
+│   ├── image-processing.ts
+│   ├── skin-profile.ts
+│   └── types/
+│       ├── api.ts
+│       ├── submission.ts
+│       └── ui.ts
+├── prisma/
+│   ├── dev.db
+│   └── schema.prisma
+├── public/
+│   └── submissions/
+│       ├── enhanced/
+│       └── originals/
+├── next.config.ts
+├── package.json
+├── prisma.config.ts
+└── README.md
 ```
 
 ## Build

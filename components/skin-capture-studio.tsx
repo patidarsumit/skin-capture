@@ -3,6 +3,8 @@
 import { ChangeEvent, useEffect, useMemo, useRef, useState } from "react"
 import { useRouter } from "next/navigation"
 import { FloatingToast } from "@/components/feedback-ui"
+import type { EnhanceResponse, SubmitResponse } from "@/lib/types/api"
+import type { ToastState } from "@/lib/types/ui"
 import {
   initialSkinProfile,
   skinConcerns,
@@ -11,28 +13,6 @@ import {
   type SkinConcern,
   type SkinProfilePayload,
 } from "@/lib/skin-profile"
-
-type EnhanceResponse = {
-  imageDataUrl?: string
-  error?: string
-}
-
-type SubmitResponse = {
-  message?: string
-  error?: string
-  submission?: {
-    id: number
-    originalPath: string
-    enhancedPath: string
-  }
-}
-
-type ToastState = {
-  open: boolean
-  tone: "neutral" | "success" | "error"
-  title: string
-  message: string
-}
 
 const defaultMessage = "Step 1: upload or capture a skin image to begin."
 
@@ -140,6 +120,7 @@ export function SkinCaptureStudio() {
     setResultView("after")
     setMessage(nextMessage)
     setMessageTone("neutral")
+    // Clearing the hidden input lets users pick the same file again after removing it.
     if (fileInputRef.current) {
       fileInputRef.current.value = ""
     }
