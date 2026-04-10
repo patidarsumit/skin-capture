@@ -1,27 +1,12 @@
 import { NextRequest, NextResponse } from "next/server"
-import { prisma } from "@/lib/db"
 import { createStorageName, writeBufferToPublic } from "@/lib/image-processing"
-import { skinConcerns, skinTones, skinTypes, type SkinConcern } from "@/lib/skin-profile"
+import { skinTones, skinTypes } from "@/lib/skin-profile"
+import { defaultSubmissionFilters, listSubmissions, parseConcerns } from "@/lib/submissions"
+import { prisma } from "@/lib/db"
 import * as path from "path"
 
 export const runtime = "nodejs"
 export const maxDuration = 60
-
-function parseConcerns(input: string) {
-  try {
-    const parsed = JSON.parse(input)
-    if (!Array.isArray(parsed)) {
-      return []
-    }
-
-    return parsed.filter((value): value is SkinConcern =>
-      typeof value === "string" &&
-      skinConcerns.includes(value as SkinConcern)
-    )
-  } catch {
-    return []
-  }
-}
 
 function bufferFromDataUrl(dataUrl: string) {
   const match = dataUrl.match(/^data:(.+);base64,(.+)$/)
@@ -35,51 +20,22 @@ function bufferFromDataUrl(dataUrl: string) {
 export async function GET(req: NextRequest) {
   try {
     const { searchParams } = new URL(req.url)
-    const skinType = searchParams.get("skinType")
-    const skinTone = searchParams.get("skinTone")
-    const concern = searchParams.get("concern")
-    const search = searchParams.get("search")
-    const dateFrom = searchParams.get("dateFrom")
-    const dateTo = searchParams.get("dateTo")
-    const sortBy = searchParams.get("sortBy") || "newest"
-
-    const where: {
-      skinType?: string
-      skinTone?: string
-      originalFilename?: { contains: string }
-      createdAt?: { gte?: Date; lte?: Date }
-      skinConcerns?: { contains: string }
-    } = {}
-
-    if (skinType && skinType !== "all") where.skinType = skinType
-    if (skinTone && skinTone !== "all") where.skinTone = skinTone
-    if (search) where.originalFilename = { contains: search }
-    if (concern && concern !== "all") where.skinConcerns = { contains: concern }
-    if (dateFrom || dateTo) {
-      where.createdAt = {}
-      if (dateFrom) where.createdAt.gte = new Date(dateFrom)
-      if (dateTo) where.createdAt.lte = new Date(dateTo)
-    }
-
-    const orderBy =
-      sortBy === "oldest"
-        ? { createdAt: "asc" as const }
-        : sortBy === "skinType"
-          ? [{ skinType: "asc" as const }, { createdAt: "desc" as const }]
-          : sortBy === "skinTone"
-            ? [{ skinTone: "asc" as const }, { createdAt: "desc" as const }]
-            : { createdAt: "desc" as const }
-
-    const submissions = await prisma.skinSubmission.findMany({
-      where,
-      orderBy,
+    const sortBy = searchParams.get("sortBy")
+    const submissions = await listSubmissions({
+      skinType: searchParams.get("skinType") || defaultSubmissionFilters.skinType,
+      skinTone: searchParams.get("skinTone") || defaultSubmissionFilters.skinTone,
+      concern: searchParams.get("concern") || defaultSubmissionFilters.concern,
+      search: searchParams.get("search") || defaultSubmissionFilters.search,
+      dateFrom: searchParams.get("dateFrom") || defaultSubmissionFilters.dateFrom,
+      dateTo: searchParams.get("dateTo") || defaultSubmissionFilters.dateTo,
+      sortBy:
+        sortBy === "oldest" || sortBy === "skinType" || sortBy === "skinTone"
+          ? sortBy
+          : defaultSubmissionFilters.sortBy,
     })
 
     return NextResponse.json({
-      submissions: submissions.map((submission) => ({
-        ...submission,
-        skinConcerns: parseConcerns(submission.skinConcerns),
-      })),
+      submissions,
     })
   } catch (error) {
     console.error("Fetching submissions failed:", error)
